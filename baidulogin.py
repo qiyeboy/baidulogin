@@ -102,7 +102,6 @@ if __name__=='__main__':
         'ppui_logintime':71755,
         'rsakey':key,
         'token':token,
-        'password':password,
         'tt':'%d'%(time.time()*1000),
 
 
