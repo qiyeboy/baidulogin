@@ -68,7 +68,7 @@ if __name__=='__main__':
     else:
         raise Exception
     ################加密password########################3
-    password = 'waqxr123789'
+    password = 'xxxxxxxxx'
     pubkey = pubkey.replace('\\n','\n').replace('\\','')
     rsakey = RSA.importKey(pubkey)
     cipher = PKCS1_v1_5.new(rsakey)
@@ -95,7 +95,7 @@ if __name__=='__main__':
         'subpro':'netdisk_web',
         'tpl':'netdisk',
         'u':'http://yun.baidu.com/',
-        'username':'594675898@qq.com',
+        'username':'xxxxxxxxxxx',
         'callback':'parent.'+callback3,
         'gid':gid,
         'password':password,
