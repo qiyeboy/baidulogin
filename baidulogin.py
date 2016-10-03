@@ -2,6 +2,7 @@
 import base64
 import json
 import re
+from urllib import quote
 from Crypto.Cipher import PKCS1_v1_5
 from Crypto.PublicKey import RSA
 import PyV8
@@ -68,11 +69,11 @@ if __name__=='__main__':
     else:
         raise Exception
     ################加密password########################3
-    password = 'xxxxxxxxx'
+    pre_password = 'xxxxxxxxxx'
     pubkey = pubkey.replace('\\n','\n').replace('\\','')
     rsakey = RSA.importKey(pubkey)
     cipher = PKCS1_v1_5.new(rsakey)
-    password = base64.b64encode(cipher.encrypt(password))
+    password = base64.b64encode(cipher.encrypt(pre_password))
     print password
     ###########获取callback#############################3
     callback3 = ctxt.locals.callback()
@@ -95,7 +96,7 @@ if __name__=='__main__':
         'subpro':'netdisk_web',
         'tpl':'netdisk',
         'u':'http://yun.baidu.com/',
-        'username':'xxxxxxxxxxx',
+        'username':'xxxxxxxx@qq.com',
         'callback':'parent.'+callback3,
         'gid':gid,
         'password':password,
@@ -139,7 +140,7 @@ if __name__=='__main__':
                         'checkvcode&token=%s' \
                         '&tpl=netdisk&subpro=netdisk_web&apiver=v3&tt=%d' \
                         '&verifycode=%s&codestring=%s' \
-                        '&callback=%s'%(token,time.time()*1000,verifycode,codeString,callback4)
+                        '&callback=%s'%(token,time.time()*1000,quote(verifycode),codeString,callback4)
         print checkVerifycodeUrl
         state = s.get(checkVerifycodeUrl)
         print state.text
@@ -171,11 +172,20 @@ if __name__=='__main__':
     data['verifycode']= verifycode
     ###########第二次post#############################3
     data['ppui_logintime']=81755
+    ####################################################
+    # 特地说明，大家会发现第二次的post出去的密码是改变的，为什么我这里没有变化呢？
+    #是因为RSA加密，加密密钥和密码原文即使不变，每次加密后的密码都是改变的，RSA有随机因子的关系
+    #所以我这里不需要在对密码原文进行第二次加密了，直接使用上次加密后的密码即可，是没有问题的。
+    # ####################################################################################
+    # password = base64.b64encode(cipher.encrypt(pre_password))
+    # print password
+    # data['password']=password
     post2_response = s.post('https://passport.baidu.com/v2/api/?login',data=data)
     if post2_response.text.find('err_no=0')!=-1:
         print '登录成功'
 
     else:
         print '登录失败'
+
 
 
